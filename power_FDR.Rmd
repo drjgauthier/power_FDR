@@ -1,0 +1,26 @@
+---
+title: "Power and FDR"
+author: "J Gauthier"
+date: "3/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Statistical concepts: type II error and power
+
+It is well known in clinical research that studies with a small number of subjects suffer from low statistical power.
+Low power means that *even if the treatment truly has an effect*, in other words, *conditioning on the fact that there is an effect*, the probability of a negative study is high. To put it simply, you are - on average - likely to miss a treatment that actually works. This risk of missing a true effect is called the type II error (β), invertly related to power (Power = 1-β). Its corollary is that a study with high power and low type II error is less likely to miss a treatment that works.
+
+We can express this concept in more statistical terms as follows: 
+*Power (1-β) = Pr(reject H0|H1 is true)* with H0 being the null hypothesis and H1 being the alternative hypothesis that the treatment is indeed doing something.
+
+One issue is that most of the time we don't know whether our treatment works or not. When planning your study, it is good and common practice to "power" the study to control the type II error (commonly at 0.1-0.2, meaning 80-90% power). In practice, this involves calculating the number of patients needed to avoid missing the smallest effect one would regret missing. 
+
+Let's assume we are designing a two-arm phase III randomized trial testing a new drug versus standard-of-care, and that we are using response as our primary endpoint.We know from prior studies that we should expect about 20% of response in the control arm (p1=0.2). We deem a increase in 20% in response rates would be clinically meaningful. Hence, we power our study based on a response rate of 40% in the investigational arm, corresponding to the smallest effect size we would regret missing. We can use the base R function power.prop.test to determine the number of patients needed to achieve our goals.
+
+```{r}
+power.prop.test(p1 = .20, p2 = .40,power=0.80,sig.level=0.05)
+```
+Note that here p1 and p2 are the response rates or proportions of responders in the control and investigational arm, respectively. 'sig.level' is the type I error rate.
